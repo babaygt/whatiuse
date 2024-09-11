@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +8,123 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String              @id
+  name               String?
+  username           String              @unique
+  email              String?             @unique
+  hashedPassword     String?
+  profileImageUrl    String?
+  bio                String?
+  isEmailVerified    Boolean             @default(false)
+  items              Item[]
+  categories         Category[]
+  socialLinks        SocialLink[]
+  sessions           Session[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  EmailVerification  EmailVerification[]
+  OAuthAccount       OAuthAccount[]
+  passwordResetToken PasswordResetToken?
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model EmailVerification {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  code   String   @unique
+  sentAt DateTime @default(now())
+
+  @@map("email_verifications")
+}
+
+model OAuthAccount {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String
+  expiresAt         DateTime?
+
+  @@map("oauth_accounts")
+}
+
+model Item {
+  id             String          @id @default(cuid())
+  name           String
+  slug           String
+  image          String?
+  description    String?
+  url            String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  user           User            @relation(fields: [userId], references: [id])
+  userId         String
+  category       Category        @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  affiliateLinks AffiliateLink[]
+
+  @@unique([userId, slug])
+  @@map("items")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  items     Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@unique([userId, slug])
+  @@map("categories")
+}
+
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String
+  url      String
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+
+  @@map("social_links")
+}
+
+model AffiliateLink {
+  id     String @id @default(cuid())
+  url    String
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId String
+
+  @@map("affiliate_links")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  @@unique([userId])
+  @@map("password_reset_tokens")
 }

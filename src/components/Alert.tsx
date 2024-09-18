@@ -38,17 +38,20 @@ export default function Alert({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
+
           <AlertDialogDescription>
             {description}
-            <div className="mt-2 flex items-center gap-2">
-              <Checkbox id="terms" onCheckedChange={onCheckedChange} />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {checkboxText}
-              </label>
-            </div>
+            {checkboxText && (
+              <div className="mt-2 flex items-center gap-2">
+                <Checkbox id="terms" onCheckedChange={onCheckedChange} />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {checkboxText}
+                </label>
+              </div>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

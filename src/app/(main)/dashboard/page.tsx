@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Page() {
   const { toast } = useToast();
+
   const handleSignOut = async () => {
     await signOut();
     toast({

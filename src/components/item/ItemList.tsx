@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import Alert from "@/components/Alert";
 import { ItemFormDialog } from "@/components/item/ItemFormDialog";
 import { Item, Category } from "@/types";
-import { Image as ImageIcon } from "lucide-react";
 
 type ItemListProps = {
   items: Item[];
@@ -89,7 +88,7 @@ export function ItemList({
         open={showDeleteAlert}
         setOpen={setShowDeleteAlert}
       />
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 pb-8 sm:grid-cols-2">
         {filteredItems.map((item) => (
           <Card
             key={item.id}
@@ -97,21 +96,6 @@ export function ItemList({
           >
             <CardContent className="flex flex-grow flex-col p-6 px-2">
               <div className="flex h-full flex-row">
-                <div className="relative h-48 w-48 flex-shrink-0 self-center">
-                  {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="rounded-md object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center rounded-lg bg-muted">
-                      <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
                 <div className="flex flex-grow flex-col p-4">
                   <div className="mb-2">
                     <h3 className="line-clamp-1 text-lg font-semibold">
@@ -158,6 +142,17 @@ export function ItemList({
                     )}
                   </div>
                 </div>
+                {item.image && (
+                  <div className="relative h-48 w-48 flex-shrink-0 self-center">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                )}
               </div>
             </CardContent>
             {isOwnProfile && (

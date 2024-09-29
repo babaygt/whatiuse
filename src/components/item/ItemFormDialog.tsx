@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,10 +34,11 @@ import { Plus, Edit } from "lucide-react";
 import { addItem, updateItem } from "@/app/actions/item";
 import { useToast } from "@/hooks/use-toast";
 import { UploadButton } from "@/utils/uploadthing";
+import { cn } from "@/lib/utils"; // Make sure you have this utility function
 
 const itemSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
+  description: z.string().max(240).optional(),
   url: z.string().url("Invalid URL").optional().or(z.literal("")),
   image: z.string().url("Invalid image URL").optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
@@ -64,6 +65,7 @@ export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
   const [newCategory, setNewCategory] = useState("");
   const { toast } = useToast();
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [descriptionLength, setDescriptionLength] = useState(0);
 
   const form = useForm<ItemFormValues>({
     resolver: zodResolver(itemSchema),
@@ -85,6 +87,10 @@ export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
           affiliateLinks: [],
         },
   });
+
+  useEffect(() => {
+    setDescriptionLength(form.getValues("description")?.length || 0);
+  }, [form]);
 
   const onSubmit = async (data: ItemFormValues) => {
     const formData = new FormData();
@@ -134,7 +140,10 @@ export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button
+          size="sm"
+          className={item && "bg-yellow-500 hover:bg-yellow-500/90"}
+        >
           {item ? (
             <>
               <Edit className="mr-2 h-4 w-4" />
@@ -181,7 +190,30 @@ export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Item description" {...field} />
+                      <div className="relative">
+                        <Textarea
+                          placeholder="Item description"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setDescriptionLength(e.target.value.length);
+                          }}
+                          className={cn(
+                            descriptionLength > 240 &&
+                              "border-red-500 focus-visible:ring-red-500",
+                          )}
+                        />
+                        <div
+                          className={cn(
+                            "absolute bottom-2 right-2 text-xs",
+                            descriptionLength > 240
+                              ? "text-red-500"
+                              : "text-gray-400",
+                          )}
+                        >
+                          {descriptionLength}/240
+                        </div>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

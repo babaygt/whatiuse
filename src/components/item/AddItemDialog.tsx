@@ -37,7 +37,7 @@ import { Category } from "@/types";
 
 const itemSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
+  description: z.string().max(240).optional(),
   url: z.string().url("Invalid URL").optional().or(z.literal("")),
   image: z.string().url("Invalid image URL").optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),

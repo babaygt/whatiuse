@@ -157,7 +157,24 @@ export function ItemList({
             </CardContent>
             {isOwnProfile && (
               <CardFooter className="flex justify-end space-x-2 border-t p-4">
-                <ItemFormDialog item={item} categories={categories} />
+                <ItemFormDialog
+                  item={item}
+                  categories={categories}
+                  onUpdateSuccess={(updatedItem) => {
+                    setFilteredItems((prevItems) =>
+                      prevItems.map((prevItem) =>
+                        prevItem.id === item.id
+                          ? {
+                              ...prevItem,
+                              ...updatedItem,
+                              category: { name: updatedItem.category },
+                              affiliateLinks: updatedItem.affiliateLinks,
+                            }
+                          : prevItem,
+                      ),
+                    );
+                  }}
+                />
                 <Button
                   variant="destructive"
                   size="sm"

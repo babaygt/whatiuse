@@ -58,9 +58,14 @@ type ItemFormDialogProps = {
     affiliateLinks: { url: string }[];
   };
   categories: { id: string; name: string }[];
+  onUpdateSuccess?: (updatedItem: ItemFormValues) => void;
 };
 
-export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
+export function ItemFormDialog({
+  item,
+  categories,
+  onUpdateSuccess,
+}: ItemFormDialogProps) {
   const [open, setOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const { toast } = useToast();
@@ -106,10 +111,29 @@ export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
 
     try {
       if (item) {
-        await updateItem(item.id, formData);
+        const updatedItem = await updateItem(item.id, formData);
         toast({
           title: "Success",
           description: "Item updated successfully",
+        });
+        if (onUpdateSuccess) {
+          onUpdateSuccess({
+            name: updatedItem.name,
+            description: updatedItem.description || "",
+            url: updatedItem.url || "",
+            image: updatedItem.image || "",
+            category: updatedItem.category.name,
+            affiliateLinks: updatedItem.affiliateLinks.map((link) => link.url),
+          });
+        }
+        // Update form values with the latest data
+        form.reset({
+          name: updatedItem.name,
+          description: updatedItem.description || "",
+          url: updatedItem.url || "",
+          image: updatedItem.image || "",
+          category: updatedItem.category.name,
+          affiliateLinks: updatedItem.affiliateLinks.map((link) => link.url),
         });
       } else {
         await addItem(formData);
@@ -119,7 +143,6 @@ export function ItemFormDialog({ item, categories }: ItemFormDialogProps) {
         });
       }
       setOpen(false);
-      form.reset();
     } catch (error) {
       toast({
         title: "Error",

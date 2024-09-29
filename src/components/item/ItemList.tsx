@@ -94,9 +94,20 @@ export function ItemList({
             key={item.id}
             className="flex h-full flex-col overflow-hidden hover:shadow-lg"
           >
-            <CardContent className="flex flex-grow flex-col p-6 px-2">
-              <div className="flex h-full flex-row">
-                <div className="flex flex-grow flex-col p-4">
+            <CardContent className="flex flex-grow flex-col p-4">
+              <div className="flex flex-col sm:flex-row">
+                {item.image && (
+                  <div className="relative mb-4 h-48 w-full sm:mb-0 sm:h-48 sm:w-48 sm:flex-shrink-0 sm:self-center">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-grow flex-col sm:ml-4">
                   <div className="mb-2">
                     <h3 className="line-clamp-1 text-lg font-semibold">
                       {item.name}
@@ -142,17 +153,6 @@ export function ItemList({
                     )}
                   </div>
                 </div>
-                {item.image && (
-                  <div className="relative h-48 w-48 flex-shrink-0 self-center">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="rounded-md object-cover"
-                    />
-                  </div>
-                )}
               </div>
             </CardContent>
             {isOwnProfile && (

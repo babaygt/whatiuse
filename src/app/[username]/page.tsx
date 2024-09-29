@@ -83,9 +83,9 @@ export default async function UserPage({
     <div className="container mx-auto mt-8 max-w-6xl px-4">
       <div className="mb-12 rounded-lg border-2 border-primary/20 bg-card p-4 shadow-md">
         <div className="flex flex-col items-center space-y-4 sm:flex-row sm:items-start sm:justify-between sm:space-x-8 sm:space-y-0">
-          <div className="flex flex-col items-center sm:flex-row sm:space-x-8">
+          <div className="flex w-full flex-col items-center sm:flex-row sm:space-x-8">
             {profileUser.profileImageUrl && (
-              <Avatar className="h-32 w-32">
+              <Avatar className="h-32 w-32 flex-shrink-0">
                 <AvatarImage src={profileUser.profileImageUrl || undefined} />
                 <AvatarFallback>
                   {profileUser.name
@@ -94,7 +94,7 @@ export default async function UserPage({
                 </AvatarFallback>
               </Avatar>
             )}
-            <div className="flex flex-col text-center sm:text-left">
+            <div className="flex w-full flex-col text-center sm:text-left">
               <div className="flex flex-col items-center gap-2 sm:flex-row">
                 <h1 className="text-2xl font-bold">{profileUser.name}</h1>
                 <p className="text-lg text-muted-foreground">
@@ -102,10 +102,12 @@ export default async function UserPage({
                 </p>
               </div>
               {profileUser.bio && (
-                <p className="mt-2 text-muted-foreground">{profileUser.bio}</p>
+                <p className="mt-2 break-words text-justify text-muted-foreground">
+                  {profileUser.bio}
+                </p>
               )}
               {profileUser.socialLinks.length > 0 && (
-                <div className="mt-4 flex justify-center space-x-4 sm:justify-start">
+                <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
                   {profileUser.socialLinks.map((link) => {
                     let Icon;
                     let bgColor;

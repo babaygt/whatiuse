@@ -19,3 +19,13 @@ export interface AffiliateLink {
   id: string;
   url: string;
 }
+
+export interface User {
+  id: string;
+  name: string | null;
+  username: string;
+  email: string | null;
+  bio: string | null;
+  profileImageUrl: string | null;
+  socialLinks: { platform: string; url: string }[];
+}

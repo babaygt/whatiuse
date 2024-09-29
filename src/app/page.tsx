@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Laptop, Share2, Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { ReactNode } from "react";
+import { signOut } from "@/app/(auth)/(logout)/actions";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface FeatureCardProps {
   icon: ReactNode;
@@ -13,7 +16,21 @@ interface FeatureCardProps {
 }
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const { user, loading, setUser } = useAuth();
+
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: "You have been logged out",
+      description: "Redirecting to login page...",
+      variant: "success",
+    });
+    setUser(null);
+    router.push("/login");
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -34,12 +51,18 @@ export default function Home() {
               Loading...
             </Button>
           ) : user ? (
-            <Link href={`/${user.username}`}>
-              <Button size="lg">
-                Go to Profile
-                <ArrowRight className="ml-2 h-4 w-4" />
+            <div className="flex items-center gap-2">
+              <Link href={`/${user.username}`}>
+                <Button size="lg">
+                  Go to Profile
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+
+              <Button onClick={handleSignOut} variant="destructive" size="lg">
+                Logout
               </Button>
-            </Link>
+            </div>
           ) : (
             <>
               <Link href="/signup">

@@ -1,34 +1,37 @@
 import { Metadata } from "next";
-import ForgetPasswordForm from "./ResetPasswordForm";
+import ResetPasswordForm from "./ResetPasswordForm";
 import Link from "next/link";
+import { validateRequest } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Reset Password",
+  description: "Reset your password.",
 };
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
+  const { user } = await validateRequest();
+
+  if (!user) {
+    return redirect("/login");
+  }
+
   return (
     <main className="flex h-screen items-center justify-center p-5">
-      <div className="flex h-full max-h-[40rem] w-full max-w-[30rem] overflow-hidden rounded-xl bg-card shadow-2xl">
-        <div className="w-full space-y-10 overflow-y-auto p-10">
+      <div className="flex h-full max-h-[32rem] w-full max-w-[26rem] overflow-hidden rounded-xl bg-card shadow-2xl">
+        <div className="w-full space-y-6 overflow-y-auto p-8">
           <div className="space-y-1 text-center">
-            <h1 className="text-3xl font-bold">Reset Password</h1>
+            <h1 className="text-2xl font-bold">Reset Password</h1>
             <p className="text-sm text-muted-foreground">
               Please enter your new password.
             </p>
           </div>
-          <div className="space-y-5">
-            <ForgetPasswordForm />
-            <div className="flex flex-col space-y-2">
-              <Link
-                href="/login"
-                className="font-mediumtext-muted-foreground text-center transition-colors hover:text-primary/80"
-              >
-                Back to Login
-              </Link>
+          <div className="space-y-4">
+            <ResetPasswordForm />
+            <div className="flex justify-center">
               <Link
                 href="/"
-                className="font-mediumtext-muted-foreground text-center transition-colors hover:text-primary/80"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               >
                 Back to Home
               </Link>

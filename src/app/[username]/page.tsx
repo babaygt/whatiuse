@@ -81,7 +81,7 @@ export default async function UserPage({
 
   return (
     <div className="container mx-auto mt-8 max-w-6xl px-4">
-      <div className="mb-12 rounded-lg bg-card p-4 shadow-md">
+      <div className="mb-12 rounded-lg border-2 border-primary/20 bg-card p-4 shadow-md">
         <div className="flex flex-col items-center space-y-4 sm:flex-row sm:items-start sm:justify-between sm:space-x-8 sm:space-y-0">
           <div className="flex flex-col items-center sm:flex-row sm:space-x-8">
             {profileUser.profileImageUrl && (

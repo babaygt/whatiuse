@@ -117,9 +117,7 @@ export function ItemList({
                     </span>
                   </div>
                   {item.description && (
-                    <p className="mb-4 line-clamp-3 text-sm">
-                      {item.description}
-                    </p>
+                    <p className="mb-4 text-sm">{item.description}</p>
                   )}
                   <div className="mt-auto space-y-2">
                     {item.url && (

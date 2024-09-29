@@ -38,8 +38,9 @@ export function CategorySelector({
     try {
       await deleteCategory(categoryId);
       toast({
-        title: "Success",
+        title: "Category deleted",
         description: "Category deleted successfully",
+        variant: "success",
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -80,6 +81,7 @@ export function CategorySelector({
           variant={selectedCategory === "All" ? "default" : "outline"}
           size="sm"
           onClick={() => handleCategoryClick("All")}
+          className="min-w-16"
         >
           All
         </Button>
@@ -96,6 +98,7 @@ export function CategorySelector({
               }
               size="sm"
               onClick={() => handleCategoryClick(category.name)}
+              className="min-w-16"
             >
               {category.name}
             </Button>

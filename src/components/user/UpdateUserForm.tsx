@@ -26,6 +26,7 @@ import { updateUser } from "@/app/actions/user";
 import { useToast } from "@/hooks/use-toast";
 import { UploadButton } from "@/utils/uploadthing";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const updateUserSchema = z.object({
   name: z.string(),
@@ -71,6 +72,7 @@ const predefinedPlatforms = [
 ];
 
 export function UpdateUserForm({ user, onUpdateSuccess }: UpdateUserFormProps) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
@@ -112,8 +114,8 @@ export function UpdateUserForm({ user, onUpdateSuccess }: UpdateUserFormProps) {
 
       // Check if the username has changed
       if (updatedUser.username !== oldUsername) {
-        // Redirect to the new profile page
-        window.location.href = `/${updatedUser.username}`;
+        // Use router.push for client-side navigation
+        router.push(`/${updatedUser.username}`);
       } else {
         onUpdateSuccess();
       }

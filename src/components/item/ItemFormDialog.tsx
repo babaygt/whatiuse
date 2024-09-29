@@ -55,10 +55,17 @@ type ItemFormDialogProps = {
     url: string | null;
     image: string | null;
     category: { name: string };
-    affiliateLinks: { url: string }[];
+    affiliateLinks: { id: string; url: string }[];
   };
   categories: { id: string; name: string }[];
-  onUpdateSuccess?: (updatedItem: ItemFormValues) => void;
+  onUpdateSuccess?: (updatedItem: {
+    name: string;
+    description: string;
+    url: string;
+    image: string;
+    category: string;
+    affiliateLinks: { id: string; url: string }[];
+  }) => void;
 };
 
 export function ItemFormDialog({
@@ -113,8 +120,9 @@ export function ItemFormDialog({
       if (item) {
         const updatedItem = await updateItem(item.id, formData);
         toast({
-          title: "Success",
+          title: "Item updated",
           description: "Item updated successfully",
+          variant: "success",
         });
         if (onUpdateSuccess) {
           onUpdateSuccess({
@@ -123,7 +131,10 @@ export function ItemFormDialog({
             url: updatedItem.url || "",
             image: updatedItem.image || "",
             category: updatedItem.category.name,
-            affiliateLinks: updatedItem.affiliateLinks.map((link) => link.url),
+            affiliateLinks: updatedItem.affiliateLinks.map((link) => ({
+              id: link.id,
+              url: link.url,
+            })),
           });
         }
         // Update form values with the latest data
@@ -138,8 +149,9 @@ export function ItemFormDialog({
       } else {
         await addItem(formData);
         toast({
-          title: "Success",
+          title: "Item added",
           description: "Item added successfully",
+          variant: "success",
         });
       }
       setOpen(false);
@@ -379,7 +391,6 @@ export function ItemFormDialog({
                 </div>
                 <Button
                   type="button"
-                  variant="outline"
                   size="sm"
                   className="mt-2"
                   onClick={() => {
@@ -390,7 +401,9 @@ export function ItemFormDialog({
                   Add Affiliate Link
                 </Button>
               </div>
-              <Button type="submit">{item ? "Update Item" : "Add Item"}</Button>
+              <Button className="w-full" type="submit">
+                {item ? "Update Item" : "Add Item"}
+              </Button>
             </form>
           </Form>
         </div>

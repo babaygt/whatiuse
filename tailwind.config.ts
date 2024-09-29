@@ -51,6 +51,18 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        blue: {
+          400: "#1DA1F2", // Twitter blue
+        },
+        pink: {
+          500: "#E1306C", // Instagram pink
+        },
+        gray: {
+          800: "#333333", // GitHub dark gray
+        },
+        green: {
+          500: "#34A853", // Generic green for website
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
